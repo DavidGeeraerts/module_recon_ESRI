@@ -17,7 +17,7 @@ setlocal enableextensions
 ::#############################################################################
 ::							#DESCRIPTION#
 ::	SCRIPT STYLE: Recon
-::		Will get information about ArcGIS Pro installation
+::		Will get information about ESRI software installations
 ::		
 ::#############################################################################
 
