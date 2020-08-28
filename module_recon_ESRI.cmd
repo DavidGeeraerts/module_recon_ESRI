@@ -31,8 +31,8 @@ setlocal enableextensions
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
 SET $SCRIPT_NAME=module_recon_ESRI
-SET $SCRIPT_VERSION=1.1.0
-SET $SCRIPT_BUILD=20200828-0820
+SET $SCRIPT_VERSION=1.2.0
+SET $SCRIPT_BUILD=20200828-1030
 Title %$SCRIPT_NAME% %$SCRIPT_VERSION%
 Prompt mrE$G
 color 0E
@@ -98,8 +98,8 @@ openfiles 1> nul 2> nul
 SET $ADMIN_STATUS=%ERRORLEVEL%
 :: 0 = admin; 1 = user
 IF %$ADMIN_STATUS% NEQ 0 GoTo skipAC
-echo Running with administrative privelege!
-echo (not recommended! Run as a standard user!)
+@powershell Write-Host "Running with administrative privelege!" -ForegroundColor Red
+@powershell Write-Host "not recommended! Run as a standard user!" -ForegroundColor Red
 echo.
 
 Echo Continue or abort:
@@ -132,7 +132,7 @@ echo Recon file is here:
 echo %LOG_LOCATION%\%LOG_FILE%
 echo.
 echo All done!
-start notepad "%LOG_LOCATION%\%LOG_FILE%"
+
 
 :clean
 :: Cleanup up var directory
@@ -142,5 +142,12 @@ IF EXIST "%LOG_LOCATION%\var" RD /S /Q "%LOG_LOCATION%\var"
 echo %DATE% %TIME% End. >> %LOG_LOCATION%\%LOG_FILE%
 ECHO. >> %LOG_LOCATION%\%LOG_FILE%
 
+:: Auto open log file
+IF NOT DEFINED $QUERY_ERR GoTo skipL
+IF %$QUERY_ERR% EQU 0 IF %$QUERY_ERR_L% EQU 0 (@notepad "%LOG_LOCATION%\%LOG_FILE%")
+IF %$QUERY_ERR% EQU 0 IF %$QUERY_ERR_L% EQU 0 GoTo skipL
+IF %$QUERY_ERR% EQU 0 @notepad "%LOG_LOCATION%\%LOG_FILE%"
+IF %$QUERY_ERR_L% EQU 0 @notepad "%LOG_LOCATION%\%LOG_FILE%"
+:skipL
 timeout /T 60
 EXIT
